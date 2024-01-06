@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import Add from '../components/Add'
+import axios from 'axios'
+import { baseURL } from '../data/url'
 
 const AddQuestion = () => {
   const [title, setTitle] = useState('')
@@ -22,6 +24,11 @@ const AddQuestion = () => {
     if (questionSet.length == 0) {
       return alert('You need to set questions')
     }
+
+    axios
+      .post(`${baseURL}/add-question/`, { title, questions: questionSet })
+      .then((resp) => console.log(resp))
+      .catch((e) => console.log(e))
   }
 
   return (
