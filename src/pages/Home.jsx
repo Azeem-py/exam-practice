@@ -7,7 +7,7 @@ const Home = () => {
       <p>home</p>
       <button
         className='input bg-headerBlue text-white'
-        onClick={() => navigate('/dashboard')}
+        onClick={() => navigate('/login')}
       >
         login
       </button>
