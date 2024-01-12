@@ -5,6 +5,7 @@ import { baseURL } from '../data/url'
 import NameInput from '../components/NameInput'
 import Modal from '../components/Modal'
 import FullscreenLoader from '../components/FullScreenLoader'
+import CountdownTimer from '../components/CountDownTimer'
 
 const AnswerQuestion = () => {
   const navigate = useNavigate()
@@ -14,6 +15,7 @@ const AnswerQuestion = () => {
   const [load, setLoad] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -36,6 +38,7 @@ const AnswerQuestion = () => {
   const handleCorrectOption = (qIndex, pIndex) => {
     // qIndex and pIndex means index no. of the question and the option respectively
     const newData = { ...data }
+    console.log(newData)
     let currentQuestion = newData['Question'].splice(qIndex, 1)
     const Option = currentQuestion[0]['Option'].map((option, index) => {
       return { ...option, answer: index === pIndex }
@@ -47,40 +50,43 @@ const AnswerQuestion = () => {
   }
 
   const handleSubmit = () => {
+    closeModal()
     setIsLoading(true)
+    setIsSubmitted(true)
     const newData = { ...data }
     const pickedOptions = []
 
-    newData['Question'].forEach((question) => {
-      pickedOptions.push(
-        question['Option'].filter((option) => option['answer'] === true)[0][
-          'id'
-        ]
-      )
-    })
+    for (let question of newData['Question']) {
+      for (let option of question['Option']) {
+        console.log(option)
+        if (option['answer']) pickedOptions.push(option['id'])
+      }
+    }
 
-    pickedOptions.length > 0 &&
-      axios
-        .post(`${baseURL}/question-submit`, {
-          name,
-          answers: pickedOptions,
-          title: questionID,
-        })
-        .then((resp) => {
-          const data = JSON.stringify(resp.data)
-          localStorage.setItem('score_data', data)
-          localStorage.setItem('pickedOptions', JSON.stringify(pickedOptions))
-          navigate(`/score/${questionID}`)
-          setIsLoading(false)
-        })
-        .catch((e) => console.log(e))
+    console.log(pickedOptions)
+
+    axios
+      .post(`${baseURL}/question-submit`, {
+        name,
+        answers: pickedOptions,
+        title: questionID,
+      })
+      .then((resp) => {
+        const data = JSON.stringify(resp.data)
+        localStorage.setItem('score_data', data)
+        localStorage.setItem('pickedOptions', JSON.stringify(pickedOptions))
+        navigate(`/score/${questionID}`)
+        setIsLoading(false)
+      })
+      .catch((e) => console.log(e))
+      .finally(() => setIsLoading(false))
   }
 
   const Questions = () => {
     return (
       <div className='px-3 py-5'>
         {data ? (
-          <div>
+          <div className='h-[calc(100vh-5rem)]'>
             <header className='mb-5'>
               <h2 className='text-5xl font-bold'>{data['title']}</h2>
               <p className='italic font-semibold text-gray-600 '>
@@ -105,6 +111,7 @@ const AnswerQuestion = () => {
                             className={`lg:ml-10 border-2 lg:w-[30rem] px-2 py-3 text-xl font-semibold mb-2 flex justify-between items-center ${
                               answer && 'bg-green-700 text-white'
                             }`}
+                            tabIndex='0'
                             onClick={() =>
                               handleCorrectOption(question_index, option_index)
                             }
@@ -118,7 +125,8 @@ const AnswerQuestion = () => {
                 )
               })}
               <button
-                className='input bg-headerBlue text-white'
+                type='button'
+                className='input bg-headerBlue text-white mb-3'
                 // onClick={handleSubmit}
                 onClick={openModal}
               >
@@ -154,7 +162,18 @@ const AnswerQuestion = () => {
       {!load ? (
         <NameInput name={name} setName={setName} setLoad={setLoad} />
       ) : (
-        <Questions />
+        <div>
+          {data && data['time'] && (
+            <div className='fixed right-5 top-2'>
+              <CountdownTimer
+                minutes={data['time']}
+                handleSubmit={handleSubmit}
+                isSubmitted={isSubmitted}
+              />
+            </div>
+          )}
+          <Questions />
+        </div>
       )}
     </div>
   )

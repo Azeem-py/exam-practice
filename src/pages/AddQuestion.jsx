@@ -4,10 +4,12 @@ import axios from 'axios'
 import { baseURL } from '../data/url'
 import { useNavigate } from 'react-router-dom'
 import FullscreenLoader from '../components/FullScreenLoader'
+import { config } from '../data/config'
 
 const AddQuestion = () => {
   const navigate = useNavigate()
   const [title, setTitle] = useState('')
+  const [time, setTime] = useState('')
   const [titleError, setTitleError] = useState([
     {
       name: title,
@@ -29,12 +31,17 @@ const AddQuestion = () => {
 
     setIsLoading(true)
     axios
-      .post(`${baseURL}/add-question/`, { title, questions: questionSet })
+      .post(
+        `${baseURL}/add-question/`,
+        { title, questions: questionSet, time },
+        config
+      )
       .then((resp) => {
         console.log(resp)
         navigate('/dashboard')
       })
       .catch((e) => console.log(e))
+      .finally(() => setIsLoading(false))
   }
 
   return (
@@ -64,6 +71,17 @@ const AddQuestion = () => {
             >
               {titleError[0]['msg']}
             </p>
+          </div>
+
+          <div className='flexCol gap-2 lg:w-[40vw] mt-5'>
+            <label className='font-semibold text-xl'>Time (in minutes)</label>
+            <input
+              type='number'
+              placeholder='50'
+              className='input'
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+            />
           </div>
 
           <section className='mt-10 lg:w-[50vw]'>

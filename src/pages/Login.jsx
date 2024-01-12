@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { baseURL } from '../data/url'
+import FullscreenLoader from '../components/FullScreenLoader'
 
 const Header = () => {
   return (
@@ -9,7 +13,9 @@ const Header = () => {
 }
 
 const Login = () => {
+  const navigate = useNavigate()
   const [userData, setUserData] = useState({ email: '', password: '' })
+  const [isLoading, setIsLoading] = useState(false)
 
   const formData = [
     { name: 'email', type: 'email', placeholder: 'Enter your email' },
@@ -19,6 +25,21 @@ const Login = () => {
   const handleChange = (e) => {
     const { name, value } = e.target
     setUserData({ ...userData, [name]: value })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setIsLoading(true)
+    axios
+      .post(`${baseURL}/auth/login`, userData)
+      .then((resp) => {
+        console.log(resp.data)
+        const { accessToken } = resp.data
+        localStorage.setItem('accessToken', accessToken)
+        navigate('/dashboard')
+      })
+      .catch((err) => console.log(err['response']['data']))
+      .finally(() => setIsLoading(false))
   }
   return (
     <div className='w-screen h-full lg:h-screen flex items-center justify-center mt-16 lg:mt-auto'>
@@ -43,10 +64,14 @@ const Login = () => {
               </div>
             )
           })}
-          <button className='bg-[#1D3557] text-white  px-4 py-3 rounded text-2xl outline-none'>
+          <button
+            className='bg-[#1D3557] text-white  px-4 py-3 rounded text-2xl outline-none'
+            onClick={handleSubmit}
+          >
             LOGIN
           </button>
         </form>
+        <FullscreenLoader isLoading={isLoading} loadText={'loading...'} />
       </section>
     </div>
   )

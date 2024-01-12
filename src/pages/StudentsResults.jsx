@@ -3,6 +3,7 @@ import axios from 'axios'
 import { baseURL } from '../data/url'
 import { useParams } from 'react-router-dom'
 import FullscreenLoader from '../components/FullScreenLoader'
+import { config } from '../data/config'
 
 const StudentsResults = () => {
   const [data, setData] = useState(null)
@@ -10,7 +11,7 @@ const StudentsResults = () => {
   const { questionID } = useParams()
   useEffect(() => {
     axios
-      .get(`${baseURL}/students-results/${questionID}`)
+      .get(`${baseURL}/students-results/${questionID}`, config)
       .then((resp) => {
         console.log(resp.data)
         setData(resp.data['results'])
@@ -26,9 +27,10 @@ const StudentsResults = () => {
           {data.map((student, index) => {
             const { name, score } = student
             return (
-              <p className='text-2xl font-semibold ' key={index}>{`${
-                index + 1
-              }. ${name} scored ${score}`}</p>
+              <p
+                className='text-xl font-semibold border-b py-2'
+                key={index}
+              >{`${index + 1}. ${name} scored ${score}`}</p>
             )
           })}
         </section>

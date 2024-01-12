@@ -13,7 +13,7 @@ const SummaryBox = ({ id, title, questionNo, stdAttempt }) => {
       <header className='text-2xl font-semibold'>{title}</header>
       <footer className='text-xl mt-10'>
         <p>No. of Questions: {questionNo}</p>
-        <p>Student Attempt: 50</p>
+        <p>Student Attempt: {stdAttempt}</p>
       </footer>
     </div>
   )

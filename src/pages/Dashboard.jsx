@@ -3,6 +3,7 @@ import axios from 'axios'
 import SummaryBox from '../components/SummaryBox'
 import { useNavigate } from 'react-router-dom'
 import { baseURL } from '../data/url'
+import { config } from '../data/config'
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -10,8 +11,9 @@ const Dashboard = () => {
   const [questions, setQuestions] = useState([])
 
   useEffect(() => {
+    console.log(config)
     axios
-      .get(`${baseURL}/list-questions`)
+      .get(`${baseURL}/list-questions`, config)
       .then((resp) => {
         console.log(resp.data)
         setQuestions(resp.data['questions'])
@@ -48,11 +50,11 @@ const Dashboard = () => {
                   id={id}
                   title={title}
                   questionNo={_count['Question']}
+                  stdAttempt={_count['Student']}
                 />
               )
             })}
         </section>
-        {/* <SummaryBox /> */}
       </main>
     </div>
   )

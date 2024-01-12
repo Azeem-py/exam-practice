@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { baseURL } from '../data/url'
 import { useClipboard } from '../hooks/useClipboard'
+import { config } from '../data/config'
 
 const QuestionData = () => {
   const { questionID } = useParams()
@@ -11,7 +12,7 @@ const QuestionData = () => {
 
   useEffect(() => {
     axios
-      .get(`${baseURL}/question-data/${questionID}`)
+      .get(`${baseURL}/question-data/${questionID}`, config)
       .then((resp) => {
         console.log(resp.data)
         setData(resp.data['question'])
@@ -28,7 +29,7 @@ const QuestionData = () => {
 
   const handleClickToCopy = () => {
     copyToClipboard(textToCopy)
-    alert('Text copied to clipboard!')
+    alert('Question link copied!')
   }
 
   return (
