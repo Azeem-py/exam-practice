@@ -39,7 +39,7 @@ const QuestionData = () => {
           <header className='mb-5'>
             <h2 className='text-5xl font-bold'>{data['title']}</h2>
             <p
-              className='text-2xl underline font-semibold text-bloodRed'
+              className='text-2xl underline font-semibold text-bloodRed my-2'
               onClick={handleShowResults}
             >
               Click to see students result

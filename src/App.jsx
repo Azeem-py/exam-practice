@@ -6,12 +6,14 @@ import QuestionData from './pages/QuestionData'
 import AnswerQuestion from './pages/AnswerQuestion'
 import Score from './pages/Score'
 import StudentsResults from './pages/StudentsResults'
+import Home from './pages/Home'
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+          <Route index element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/add-question' element={<AddQuestion />} />
