@@ -2,8 +2,11 @@ import { useState } from 'react'
 import Add from '../components/Add'
 import axios from 'axios'
 import { baseURL } from '../data/url'
+import { useNavigate } from 'react-router-dom'
+import FullscreenLoader from '../components/FullScreenLoader'
 
 const AddQuestion = () => {
+  const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [titleError, setTitleError] = useState([
     {
@@ -13,10 +16,9 @@ const AddQuestion = () => {
     },
   ])
   const [questionSet, setQuestionSet] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const handlePublish = () => {
-    console.log(title)
-    console.log(JSON.stringify(questionSet))
     if (!title) {
       return alert('You need to add a title')
     }
@@ -25,9 +27,13 @@ const AddQuestion = () => {
       return alert('You need to set questions')
     }
 
+    setIsLoading(true)
     axios
       .post(`${baseURL}/add-question/`, { title, questions: questionSet })
-      .then((resp) => console.log(resp))
+      .then((resp) => {
+        console.log(resp)
+        navigate('/dashboard')
+      })
       .catch((e) => console.log(e))
   }
 
@@ -76,6 +82,10 @@ const AddQuestion = () => {
             Publish!
           </button>
         </section>
+        <FullscreenLoader
+          isLoading={isLoading}
+          loadText={'Wait while we publish your questions'}
+        />
       </main>
     </div>
   )

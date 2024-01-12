@@ -1,10 +1,23 @@
-// import React from 'react'
-
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 import SummaryBox from '../components/SummaryBox'
 import { useNavigate } from 'react-router-dom'
+import { baseURL } from '../data/url'
 
 const Dashboard = () => {
   const navigate = useNavigate()
+
+  const [questions, setQuestions] = useState([])
+
+  useEffect(() => {
+    axios
+      .get(`${baseURL}/list-questions`)
+      .then((resp) => {
+        console.log(resp.data)
+        setQuestions(resp.data['questions'])
+      })
+      .catch((e) => console.log(e))
+  }, [])
 
   return (
     <div className='p-3'>
@@ -25,7 +38,21 @@ const Dashboard = () => {
             + Add New Question
           </button>
         </section>
-        <SummaryBox />
+        <section className='flex gap-3 flex-wrap'>
+          {questions.length > 0 &&
+            questions.map((question) => {
+              const { id, title, _count } = question
+              return (
+                <SummaryBox
+                  key={id}
+                  id={id}
+                  title={title}
+                  questionNo={_count['Question']}
+                />
+              )
+            })}
+        </section>
+        {/* <SummaryBox /> */}
       </main>
     </div>
   )
