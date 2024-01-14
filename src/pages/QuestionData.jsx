@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import { baseURL } from '../data/url'
+import { baseURL, hostURL } from '../data/url'
 import { useClipboard } from '../hooks/useClipboard'
 import { config } from '../data/config'
 
@@ -24,7 +24,7 @@ const QuestionData = () => {
     navigate(`/students-results/${questionID}`)
   }
 
-  const textToCopy = `localhost:5173/practice-question/${questionID}`
+  const textToCopy = `${hostURL}/practice-question/${questionID}`
   const copyToClipboard = useClipboard()
 
   const handleClickToCopy = () => {
