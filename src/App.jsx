@@ -14,7 +14,6 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <SpeedInsights />
           <Route index element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/dashboard' element={<Dashboard />} />
