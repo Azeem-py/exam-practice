@@ -7,6 +7,7 @@ import AnswerQuestion from './pages/AnswerQuestion'
 import Score from './pages/Score'
 import StudentsResults from './pages/StudentsResults'
 import Home from './pages/Home'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
+      <SpeedInsights />
     </>
   )
 }
