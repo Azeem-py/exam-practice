@@ -7,12 +7,14 @@ import AnswerQuestion from './pages/AnswerQuestion'
 import Score from './pages/Score'
 import StudentsResults from './pages/StudentsResults'
 import Home from './pages/Home'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+          <SpeedInsights />
           <Route index element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/dashboard' element={<Dashboard />} />
