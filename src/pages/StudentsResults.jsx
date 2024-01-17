@@ -14,7 +14,7 @@ const StudentsResults = () => {
       .get(`${baseURL}/students-results/${questionID}`, config)
       .then((resp) => {
         console.log(resp.data)
-        setData(resp.data['results'])
+        setData(resp.data)
         setIsLoading(false)
       })
       .catch((e) => console.log(e))
@@ -23,14 +23,16 @@ const StudentsResults = () => {
     <div className='h-screen w-screen overflow-y-auto p-3'>
       {!isLoading ? (
         <section>
-          <h3 className='font-bold text-3xl text-headerBlue mb-4'>{`${data.length} students attempted this question set`}</h3>
-          {data.map((student, index) => {
+          <h3 className='font-bold text-3xl text-headerBlue mb-4'>{`${data['results'].length} students attempted this question set`}</h3>
+          {data['results'].map((student, index) => {
             const { name, score } = student
             return (
               <p
-                className='text-xl font-semibold border-b py-2'
+                className='text-xl md:text-2xl font-semibold border-b py-2'
                 key={index}
-              >{`${index + 1}. ${name} scored ${score}`}</p>
+              >{`${index + 1}. ${name} scored ${score} out of ${
+                data['questionCount']
+              }`}</p>
             )
           })}
         </section>
